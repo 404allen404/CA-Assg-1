@@ -24,10 +24,15 @@ int main (void) {
     {13432, 343, 4, 143, 3411, 23}, // answer is 1375
     {533, 5552, 24, 55, 8792, 9889} // answer is 16
   };
+  int answer[3] = {9, 1375, 16};
 
   for (int i = 0; i < 3; ++i) {
     int res = findKOr(nums[i], 6, k[i]);
-    printf("res: %d\n", res);
+    if (res == answer[i]) {
+      printf("Test case %d passed\n", i + 1);
+    } else {
+      printf("Test case %d failed. Expected: %d, Got: %d\n", i + 1, answer[i], res);
+    }
   }
 
   return 0;
