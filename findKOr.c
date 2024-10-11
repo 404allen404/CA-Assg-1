@@ -18,8 +18,17 @@ int findKOr(int* nums, int numsSize, int k) {
 }
 
 int main (void) {
-  int nums[6] = {7, 12, 9, 8, 9, 15};
-  int res = findKOr(nums, 6, 4);
-  printf("res: %d\n", res);
+  int k[3] = {4, 2, 5};
+  int nums[3][6] = {
+    {7, 12, 9, 8, 9, 15}, // answer is 9
+    {13432, 343, 4, 143, 3411, 23}, // answer is 1375
+    {533, 5552, 24, 55, 8792, 9889} // answer is 16
+  };
+
+  for (int i = 0; i < 3; ++i) {
+    int res = findKOr(nums[i], 6, k[i]);
+    printf("res: %d\n", res);
+  }
+
   return 0;
 }

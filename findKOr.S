@@ -11,56 +11,31 @@ main:
   lw a1, numsSize
   lw a2, k
   jal ra, findKOr
-
   jal ra, printResult
-
   li a7, 10
   ecall
 
 findKOr:
   addi sp, sp, -144
-clear_bit_cnt:
-  sw x0, 0(sp)
-  sw x0, 4(sp)
-  sw x0, 8(sp)
-  sw x0, 12(sp)
-  sw x0, 16(sp)
-  sw x0, 20(sp)
-  sw x0, 24(sp)
-  sw x0, 28(sp)
-  sw x0, 32(sp)
-  sw x0, 36(sp)
-  sw x0, 40(sp)
-  sw x0, 44(sp)
-  sw x0, 48(sp)
-  sw x0, 52(sp)
-  sw x0, 56(sp)
-  sw x0, 60(sp)
-  sw x0, 64(sp)
-  sw x0, 68(sp)
-  sw x0, 72(sp)
-  sw x0, 76(sp)
-  sw x0, 80(sp)
-  sw x0, 84(sp)
-  sw x0, 88(sp)
-  sw x0, 92(sp)
-  sw x0, 96(sp)
-  sw x0, 100(sp)
-  sw x0, 104(sp)
-  sw x0, 108(sp)
-  sw x0, 112(sp)
-  sw x0, 116(sp)
-  sw x0, 120(sp)
-  sw x0, 124(sp)
-store_arg:
   sw ra, 128(sp)
   sw a2, 132(sp) # k
   sw a1, 136(sp) # numsSize
   sw a0, 140(sp) # address of nums
 
-add t0, x0, x0  # t0 = res = 0
-add t1, x0, x0  # t1 = n = 0
-addi t4, x0, 32 # t4 = 32
+  add t0, x0, x0  # t0 = res = 0
+  add t1, x0, x0  # t1 = n = 0
+  addi t4, x0, 32 # t4 = 32
+
+clear_bit_cnt_init:
+  add t2, x0, x0
+  addi t3, x0, 32
+  add t5, sp, x0 # t5 = sp
+clear_bit_cnt:
+  bge t2, t3, findKOr_loop_0
+  sw x0, 0(t5)
+  addi t5, t5, 4
+  addi t2, t2, 1
+  jal x0, clear_bit_cnt
 
 findKOr_loop_0:
   bge t1, a1, findKOr_end # n >= numsSize
