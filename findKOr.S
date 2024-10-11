@@ -1,19 +1,82 @@
 .data
-nums: .word 7, 12, 9, 8, 9, 15
-numsSize: .word 6
-k: .word 4
-str_1: .string "res: "
-str_2: .string "\n"    
+# Number arrays
+nums1: .word 7, 12, 9, 8, 9, 15
+nums2: .word 13432, 343, 4, 143, 3411, 23
+nums3: .word 533, 5552, 24, 55, 8792, 9889
+
+# Test case structure: address of array, size of array, k, expected result
+test_cases:
+  .word nums1, 6, 4, 9
+  .word nums2, 6, 2, 1375
+  .word nums3, 6, 5, 16
+  .word 0 # End marker
+
+str_test: .string "Test case "
+str_pass: .string " passed\n"
+str_fail: .string " failed. Expected: "
+str_got:  .string ", Got: "
+str_nl:   .string "\n" 
 
 .text
 main:
-  la a0, nums
-  lw a1, numsSize
-  lw a2, k
+  la s0, test_cases      # s0 points to the current test case
+  addi s1, x0, 1         # s1 is the test case counter
+run_tests:
+  lw t0, 0(s0)           # Load address of nums
+  beq t0, x0, end_tests  # If address is 0, end tests
+
+  lw a0, 0(s0)           # Load address of nums
+  lw a1, 4(s0)           # Load size
+  lw a2, 8(s0)           # Load k
+  lw a3, 12(s0)          # Load expected result
+
   jal ra, findKOr
-  jal ra, printResult
-  li a7, 10
+  # Check result
+  beq a0, a3, test_passed
+
+  # Test failed
+  la a0, str_test
+  li a7, 4
   ecall
+  add a0, x0, s1
+  li a7, 1
+  ecall
+  la a0, str_fail
+  li a7, 4
+  ecall
+  add a0, x0, a3 # Expected result
+  li a7, 1
+  ecall
+  la a0, str_got
+  li a7, 4
+  ecall
+  add a0, x0, t0 # Actual result
+  li a7, 1
+  ecall
+  la a0, str_nl
+  li a7, 4
+  ecall
+  jal x0, next_test
+
+test_passed:
+  la a0, str_test
+  li a7, 4
+  ecall
+  mv a0, s1
+  li a7, 1
+  ecall
+  la a0, str_pass
+  li a7, 4
+  ecall
+
+next_test:
+  addi s0, s0, 16 # Move to next test case
+  addi s1, s1, 1  # Increment test case counter
+  jal x0, run_tests
+
+end_tests:
+  li a7, 10
+  ecall 
 
 findKOr:
   addi sp, sp, -144
@@ -81,20 +144,4 @@ findKOr_end:
   add a0, t0, x0
   ret
 
-printResult:
-  add t0, a0, x0
-
-  la a0, str_1
-  li a7, 4
-  ecall
-
-  add a0, t0, x0
-  li a7, 1
-  ecall
-
-  la a0, str_2
-  li a7, 4
-  ecall
-
-  ret
   
